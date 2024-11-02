@@ -1,8 +1,9 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Table } from "antd";
+import { Button, notification, Popconfirm, Table } from "antd";
 import { useEffect, useState } from "react";
 import { fetchAllUserAPI } from "../../services/api.service";
 import CreateUser from "./create.user";
+import UpdateUser from "./update.user";
 
 const UserTable = () => {
 
@@ -12,6 +13,9 @@ const UserTable = () => {
     const [total, setTotal] = useState(10)
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+
+    const [dataUpdateUser, setDataUpdateUser] = useState(null)
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
 
     useEffect(() => {
         loadUser()
@@ -63,8 +67,23 @@ const UserTable = () => {
                     display: "flex",
                     gap: "15px"
                 }}>
-                    <EditOutlined style={{ cursor: "pointer", color: "orange" }} />
-                    <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+                    <EditOutlined
+                        style={{ cursor: "pointer", color: "orange" }}
+                        onClick={() => {
+                            setIsUpdateModalOpen(true)
+                            setDataUpdateUser(record)
+                        }} />
+
+                    <Popconfirm
+                        title="Delete the user"
+                        description="Are you sure to delete this user?"
+                        onConfirm={() => { }}
+                        onCancel={() => { }}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+                    </Popconfirm>
                 </div>
             )
         }
@@ -77,13 +96,15 @@ const UserTable = () => {
         }
     }
 
+
+
     return (
         <>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
                 <h3>Table Users</h3>
                 <Button
                     type='primary'
-                    onClick={() => { setIsCreateModalOpen(true) }}>Create Book</Button>
+                    onClick={() => { setIsCreateModalOpen(true) }}>Create User</Button>
             </div>
 
             <Table
@@ -102,6 +123,13 @@ const UserTable = () => {
             <CreateUser
                 isCreateModalOpen={isCreateModalOpen}
                 setIsCreateModalOpen={setIsCreateModalOpen}
+                loadUser={loadUser} />
+
+            <UpdateUser
+                isUpdateModalOpen={isUpdateModalOpen}
+                setIsUpdateModalOpen={setIsUpdateModalOpen}
+                dataUpdateUser={dataUpdateUser}
+                setDataUpdateUser={setDataUpdateUser}
                 loadUser={loadUser} />
         </>
     )
