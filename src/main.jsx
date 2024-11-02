@@ -7,6 +7,10 @@ import {
 } from "react-router-dom";
 import ErrorPage from './pages/error.jsx';
 import TodoApp from './components/todo/TodoApp.jsx';
+import UserPage from './pages/user.jsx';
+import BookPage from './pages/book.jsx'
+import RegisterPage from './pages/register.jsx'
+import LoginPage from './pages/login.jsx'
 
 const router = createBrowserRouter([
   {
@@ -20,22 +24,22 @@ const router = createBrowserRouter([
       },
       {
         path: "/user",
-        element: <div>User Page</div>
+        element: <UserPage />
       },
       {
         path: "/book",
-        element: <div>Book Page</div>
+        element: <BookPage />
       },
     ],
   },
 
   {
     path: "/register",
-    element: <div>Register Page</div>
+    element: <RegisterPage />
   },
   {
     path: "login",
-    element: <div>Login Page</div>
+    element: <LoginPage />
   }
 ]);
 

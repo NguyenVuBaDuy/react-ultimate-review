@@ -1,20 +1,21 @@
 import { BookOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const items = [
     {
-        label: 'Home',
+        label: <Link to={'/'}>Home</Link>,
         key: 'home',
         icon: <HomeOutlined />,
     },
     {
-        label: 'User',
+        label: <Link to={'/user'}>User</Link>,
         key: 'user',
         icon: <UserOutlined />,
     },
     {
-        label: 'Book',
+        label: <Link to={'/book'}>Book</Link>,
         key: 'book',
         icon: <BookOutlined />,
     }
