@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, notification, Popconfirm, Table } from "antd";
 import { useEffect, useState } from "react";
-import { fetchAllUserAPI } from "../../services/api.service";
+import { deleteUserAPI, fetchAllUserAPI } from "../../services/api.service";
 import CreateUser from "./create.user";
 import UpdateUser from "./update.user";
 
@@ -77,7 +77,7 @@ const UserTable = () => {
                     <Popconfirm
                         title="Delete the user"
                         description="Are you sure to delete this user?"
-                        onConfirm={() => { }}
+                        onConfirm={() => { handleDeleteUser(record._id) }}
                         onCancel={() => { }}
                         okText="Yes"
                         cancelText="No"
@@ -89,14 +89,35 @@ const UserTable = () => {
         }
     ];
 
-    const onChange = (values) => {
-        if (values) {
-            setCurrent(values.current)
-            setPageSize(values.pageSize)
+    const onChange = (pagination) => {
+        if (pagination && pagination.current) {
+            if (+pagination.current !== +current) {
+                setCurrent(+pagination.current)
+            }
         }
+
+        if (pagination && pagination.pageSize) {
+            if (+pagination.pageSize !== +pageSize) {
+                setPageSize(+pagination.pageSize)
+            }
+        }
+    };
+
+    const handleDeleteUser = async (id) => {
+        const res = await deleteUserAPI(id);
+        if (res.data) {
+            notification.success({
+                message: "Delete User",
+                description: "Delete User Successful!"
+            })
+        } else {
+            notification.error({
+                message: "Error delete user",
+                description: JSON.stringify(res.message)
+            })
+        }
+        await loadUser()
     }
-
-
 
     return (
         <>
