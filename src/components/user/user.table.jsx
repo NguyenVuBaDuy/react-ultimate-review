@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { deleteUserAPI, fetchAllUserAPI } from "../../services/api.service";
 import CreateUser from "./create.user";
 import UpdateUser from "./update.user";
+import ViewUserDetail from "./view.user.detail";
 
 const UserTable = () => {
 
@@ -16,6 +17,9 @@ const UserTable = () => {
 
     const [dataUpdateUser, setDataUpdateUser] = useState(null)
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+
+    const [isViewDetailUserOpen, setIsViewUserDetailOpen] = useState(false)
+    const [dataViewDetailUser, setDataViewDetailUser] = useState(null)
 
     useEffect(() => {
         loadUser()
@@ -33,7 +37,6 @@ const UserTable = () => {
     }
 
 
-
     const columns = [
         {
             title: 'STT',
@@ -47,9 +50,14 @@ const UserTable = () => {
             title: 'Id',
             dataIndex: '_id',
             render: (_, record) => (
-                <a href="#">
+                <a
+                    href="#"
+                    onClick={() => {
+                        setIsViewUserDetailOpen(true)
+                        setDataViewDetailUser(record)
+                    }} >
                     {record._id}
-                </a>
+                </a >
             )
         },
         {
@@ -151,6 +159,12 @@ const UserTable = () => {
                 setIsUpdateModalOpen={setIsUpdateModalOpen}
                 dataUpdateUser={dataUpdateUser}
                 setDataUpdateUser={setDataUpdateUser}
+                loadUser={loadUser} />
+
+            <ViewUserDetail
+                isViewDetailUserOpen={isViewDetailUserOpen}
+                setIsViewUserDetailOpen={setIsViewUserDetailOpen}
+                dataViewDetailUser={dataViewDetailUser}
                 loadUser={loadUser} />
         </>
     )

@@ -49,7 +49,7 @@ const UpdateUser = (props) => {
             title="Basic Modal"
             open={isUpdateModalOpen}
             onOk={() => { handleSubmitUpdateUser() }}
-            onCancel={() => { resetAndCloseModal }}>
+            onCancel={() => { resetAndCloseModal() }}>
             <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
                 <div>
                     <span>Id</span>
