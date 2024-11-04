@@ -2,14 +2,22 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Form, Input, message, notification, Row } from "antd"
 import { Link, useNavigate } from "react-router-dom";
 import { loginAPI } from "../services/api.service";
+import { useContext, useState } from "react";
+import { AuthContext } from "../components/context/auth.context"
 
 const LoginPage = () => {
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
+    const { setUser } = useContext(AuthContext)
+
     const handleSubmitFormLogin = async (values) => {
+        setLoading(true)
         const res = await loginAPI(values.email, values.password)
         if (res.data) {
+            localStorage.setItem("access_token", res.data.access_token)
+            setUser(res.data.user)
             message.success("Log in successfully")
             navigate("/")
         } else {
@@ -18,7 +26,9 @@ const LoginPage = () => {
                 description: JSON.stringify(res.message)
             })
         }
+        setLoading(false)
     }
+
 
     return (
         <Row justify={"center"} style={{ marginTop: "30px" }}>
@@ -63,7 +73,10 @@ const LoginPage = () => {
                                 },
                             ]}
                         >
-                            <Input.Password />
+                            <Input.Password
+                                onKeyDown={(event) => {
+                                    event.key === "Enter" && form.submit()
+                                }} />
                         </Form.Item>
 
                         <Form.Item>
@@ -75,6 +88,7 @@ const LoginPage = () => {
                                 <Button
                                     type="primary"
                                     onClick={() => form.submit()}
+                                    loading={loading}
                                 >
                                     Log in </Button>
 
