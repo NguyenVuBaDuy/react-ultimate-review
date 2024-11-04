@@ -83,7 +83,7 @@ const RegisterPage = () => {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input.Password />
                     </Form.Item>
                 </Col>
             </Row>
@@ -116,7 +116,7 @@ const RegisterPage = () => {
                         <Button type="primary" onClick={() => { form.submit() }}>Register</Button>
                     </div>
                     <Divider />
-                    <div>Đã có tài khoản? <Link to={"/login"}>Đăng nhập tại đây</Link></div>
+                    <div>Already have an account? <Link to={"/login"}>Sign in here</Link></div>
                 </Col>
             </Row>
         </Form>
