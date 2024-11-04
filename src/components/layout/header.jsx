@@ -1,8 +1,9 @@
 import { AliwangwangOutlined, BookOutlined, HomeOutlined, LoginOutlined, UserOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
+import { Menu, message } from 'antd';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
+import { logoutAPI } from '../../services/api.service';
 
 
 
@@ -13,6 +14,23 @@ const Header = () => {
 
     const { user, setUser } = useContext(AuthContext)
 
+
+    const handleLogout = async () => {
+        const res = await logoutAPI()
+        if (res.data) {
+            localStorage.removeItem("access_token")
+            setUser({
+                email: "",
+                phone: "",
+                fullName: "",
+                role: "",
+                avatar: "",
+                id: ""
+            })
+            message.success("You are logged out")
+            navigate("/")
+        }
+    }
 
     const items = [
         {
@@ -42,10 +60,10 @@ const Header = () => {
             icon: <AliwangwangOutlined />,
             children: [
                 {
-                    label: 'Log out',
-                    key: 'logout',
-                },
-            ],
+                    label: <span onClick={() => handleLogout()}>Log out</span>,
+                    key: "logout"
+                }
+            ]
         }] : []),
     ]
 
