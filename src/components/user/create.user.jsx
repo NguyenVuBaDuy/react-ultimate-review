@@ -34,7 +34,7 @@ const CreateUser = (props) => {
 
     return (
         <Modal
-            title="Basic Modal"
+            title="Create User"
             open={isCreateModalOpen}
             onOk={() => { form.submit() }}
             onCancel={() => { resetAndCloseModal() }}

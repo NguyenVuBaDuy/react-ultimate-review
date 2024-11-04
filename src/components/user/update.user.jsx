@@ -46,7 +46,7 @@ const UpdateUser = (props) => {
 
     return (
         <Modal
-            title="Basic Modal"
+            title="Update Information User"
             open={isUpdateModalOpen}
             onOk={() => { handleSubmitUpdateUser() }}
             onCancel={() => { resetAndCloseModal() }}>

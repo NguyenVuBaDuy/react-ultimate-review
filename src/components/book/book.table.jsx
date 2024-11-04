@@ -2,6 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { Button, Popconfirm, Table } from "antd"
 import { useEffect, useState } from "react"
 import { fetchAllBookAPI } from "../../services/api.service"
+import CreateBook from "./create.book"
 
 const BookTable = () => {
 
@@ -9,6 +10,8 @@ const BookTable = () => {
     const [current, setCurrent] = useState(1)
     const [pageSize, setPageSize] = useState(5)
     const [total, setTotal] = useState(10)
+
+    const [isCreateBookModalOpen, setIsCreateBookModalOpen] = useState(false)
 
     useEffect(() => {
         loadBook()
@@ -107,7 +110,7 @@ const BookTable = () => {
                 <h3>Table Books</h3>
                 <Button
                     type='primary'
-                    onClick={() => { }}>Create Book</Button>
+                    onClick={() => { setIsCreateBookModalOpen(true) }}>Create Book</Button>
             </div>
             <Table
                 dataSource={dataBook}
@@ -121,6 +124,10 @@ const BookTable = () => {
                         showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total}</div>) }
                     }}
                 onChange={onChange} />
+
+            <CreateBook
+                setIsCreateBookModalOpen={setIsCreateBookModalOpen}
+                isCreateBookModalOpen={isCreateBookModalOpen} />
 
         </>
     )
