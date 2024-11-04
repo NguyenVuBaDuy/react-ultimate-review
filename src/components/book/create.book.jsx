@@ -1,16 +1,26 @@
-import { Form, Input, InputNumber, Modal, Select } from "antd"
+import { Form, Input, InputNumber, Modal, notification, Select } from "antd"
 import { useForm } from "antd/es/form/Form"
 import { useState } from "react"
+import { createBookAPI, handleUploadFile } from "../../services/api.service"
 
 const CreateBook = (props) => {
 
-    const { isCreateBookModalOpen, setIsCreateBookModalOpen } = props
+    const { isCreateBookModalOpen, setIsCreateBookModalOpen, loadBook } = props
 
     const [form] = useForm()
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [preview, setPreview] = useState(null)
 
+    const [loading, setLoading] = useState(false)
+
+    const delay = (milSeconds) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve()
+            }, milSeconds)
+        })
+    }
 
     const handleOnChangeFile = (event) => {
         if (!event.target.files || event.target.files.length === 0) {
@@ -26,12 +36,52 @@ const CreateBook = (props) => {
         }
     }
 
-    const handleSubmitCreateUser = (event) => {
+    const handleSubmitCreateUser = async (values) => {
+        if (!selectedFile) {
+            notification.error({
+                message: "Upload Thumbnail",
+                description: "Please add thumbnail!"
+            })
+            return
+        }
+        const { mainText, author, price, quantity, category } = values
+        setLoading(true)
+        await delay(2000)
+        const resUpload = await handleUploadFile(selectedFile, "book")
+        if (resUpload.data) {
+            const newThumbnail = resUpload.data.fileUploaded
 
+            const resCreateBook = await createBookAPI(newThumbnail, mainText, author, price, quantity, category)
+            if (resCreateBook.data) {
+
+                resetAndCloseModal()
+
+                notification.success({
+                    message: "Create Book",
+                    description: "Create Book Successful!"
+                })
+
+                await loadBook()
+            } else {
+                notification.error({
+                    message: "Create Book",
+                    description: JSON.stringify(resCreateBook.message)
+                })
+            }
+        } else {
+            notification.error({
+                message: "Upload Thumbnail",
+                description: JSON.stringify(resUpload.message)
+            })
+        }
+        setLoading(false)
     }
 
     const resetAndCloseModal = () => {
         setIsCreateBookModalOpen(false)
+        setPreview(null)
+        setSelectedFile(null)
+        form.resetFields()
     }
 
     return (
@@ -40,12 +90,18 @@ const CreateBook = (props) => {
             open={isCreateBookModalOpen}
             onOk={() => { form.submit() }}
             onCancel={() => { resetAndCloseModal() }}
-            centered>
+            centered
+            okText="Create"
+            okButtonProps={{
+                loading: loading
+            }}>
+
             <Form
                 form={form}
                 name="control-hooks"
                 layout="vertical"
                 onFinish={(values) => { handleSubmitCreateUser(values) }}
+
             >
                 <Form.Item
                     name="mainText"
@@ -126,8 +182,9 @@ const CreateBook = (props) => {
                 </Form.Item>
 
                 <div>
+                    <div>Thumbnail:</div>
                     <label
-                        htmlFor="btnUploadFile"
+                        htmlFor="btnUploadThumbnail"
                         style={{
                             display: "block",
                             width: "fit-content",
@@ -139,7 +196,7 @@ const CreateBook = (props) => {
                         }}> Upload</label>
                     <input
                         type="file"
-                        id="btnUploadFile"
+                        id="btnUploadThumbnail"
                         hidden
                         onChange={(event) => {
                             handleOnChangeFile(event)
@@ -163,9 +220,8 @@ const CreateBook = (props) => {
                                 <img style={{
                                     height: "100%",
                                     width: "100%",
-                                    objectFit: "cover",
+                                    objectFit: "contain",
                                     objectPosition: "center",
-                                    borderRadius: "50%"
                                 }}
                                     src={preview} />
                             </div>

@@ -127,7 +127,8 @@ const BookTable = () => {
 
             <CreateBook
                 setIsCreateBookModalOpen={setIsCreateBookModalOpen}
-                isCreateBookModalOpen={isCreateBookModalOpen} />
+                isCreateBookModalOpen={isCreateBookModalOpen}
+                loadBook={loadBook} />
 
         </>
     )
