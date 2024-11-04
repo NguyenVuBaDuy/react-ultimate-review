@@ -1,9 +1,10 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
-import { Button, Popconfirm, Table } from "antd"
+import { Button, notification, Popconfirm, Table } from "antd"
 import { useEffect, useState } from "react"
-import { fetchAllBookAPI } from "../../services/api.service"
+import { deleteBookAPI, fetchAllBookAPI } from "../../services/api.service"
 import CreateBook from "./create.book"
 import ViewBookDetail from "./view.book.detail"
+import UpdateBook from "./update.book"
 
 const BookTable = () => {
 
@@ -16,6 +17,9 @@ const BookTable = () => {
 
     const [isViewBookDetailOpen, setIsViewBookDetailOpen] = useState(false)
     const [dataBookDetail, setDataBookDetail] = useState(null)
+
+    const [isUpdateBookModalOpen, setIsUpdateBookModalOpen] = useState(false)
+    const [dataBookUpdate, setDataBookUpdate] = useState(null)
 
     useEffect(() => {
         loadBook()
@@ -32,6 +36,22 @@ const BookTable = () => {
             setCurrent(res.data.meta.current)
             setPageSize(res.data.meta.pageSize)
             setTotal(res.data.meta.total)
+        }
+    }
+
+    const handleDeleteBook = async (id) => {
+        const res = await deleteBookAPI(id)
+        if (res.data) {
+            notification.success({
+                message: "Delete Book",
+                description: "Delete Book Successdful!"
+            })
+            await loadBook()
+        } else {
+            notification.error({
+                message: "Delete Book",
+                description: JSON.stringify(res.message)
+            })
         }
     }
 
@@ -87,12 +107,14 @@ const BookTable = () => {
                     <EditOutlined
                         style={{ cursor: "pointer", color: "orange" }}
                         onClick={() => {
+                            setIsUpdateBookModalOpen(true)
+                            setDataBookUpdate(record)
                         }} />
 
                     <Popconfirm
                         title="Delete the user"
                         description="Are you sure to delete this user?"
-                        onConfirm={() => { }}
+                        onConfirm={() => { handleDeleteBook(record._id) }}
                         onCancel={() => { }}
                         okText="Yes"
                         cancelText="No"
@@ -142,12 +164,22 @@ const BookTable = () => {
             <CreateBook
                 setIsCreateBookModalOpen={setIsCreateBookModalOpen}
                 isCreateBookModalOpen={isCreateBookModalOpen}
-                loadBook={loadBook} />
+                loadBook={loadBook}
+            />
             <ViewBookDetail
                 isViewBookDetailOpen={isViewBookDetailOpen}
                 setIsViewBookDetailOpen={setIsViewBookDetailOpen}
                 dataBookDetail={dataBookDetail}
-                currency={currency} />
+                currency={currency}
+            />
+
+            <UpdateBook
+                setDataBookUpdate={setDataBookUpdate}
+                dataBookUpdate={dataBookUpdate}
+                setIsUpdateBookModalOpen={setIsUpdateBookModalOpen}
+                isUpdateBookModalOpen={isUpdateBookModalOpen}
+                loadBook={loadBook}
+            />
 
         </>
     )

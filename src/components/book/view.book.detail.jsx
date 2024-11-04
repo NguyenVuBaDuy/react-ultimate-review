@@ -31,7 +31,7 @@ const ViewBookDetail = (props) => {
                             <img style={{
                                 height: "100%",
                                 width: "100%",
-                                objectFit: "cover",
+                                objectFit: "contain",
                                 objectPosition: "contain",
                             }}
                                 src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${dataBookDetail.thumbnail}`} />

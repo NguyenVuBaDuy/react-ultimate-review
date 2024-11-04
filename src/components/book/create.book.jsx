@@ -98,7 +98,6 @@ const CreateBook = (props) => {
 
             <Form
                 form={form}
-                name="control-hooks"
                 layout="vertical"
                 onFinish={(values) => { handleSubmitCreateUser(values) }}
 
@@ -139,7 +138,7 @@ const CreateBook = (props) => {
                         },
                     ]}
                 >
-                    <InputNumber style={{ width: "100%" }} />
+                    <InputNumber style={{ width: "100%" }} addonAfter="₫" />
                 </Form.Item>
 
                 <Form.Item
