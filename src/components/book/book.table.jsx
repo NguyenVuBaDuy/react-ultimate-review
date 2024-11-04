@@ -21,6 +21,8 @@ const BookTable = () => {
     const [isUpdateBookModalOpen, setIsUpdateBookModalOpen] = useState(false)
     const [dataBookUpdate, setDataBookUpdate] = useState(null)
 
+    const [isLoadingTable, setIsLoadingTable] = useState(false)
+
     useEffect(() => {
         loadBook()
     }, [current, pageSize])
@@ -30,6 +32,7 @@ const BookTable = () => {
     }
 
     const loadBook = async () => {
+        setIsLoadingTable(true)
         const res = await fetchAllBookAPI(current, pageSize)
         if (res.data) {
             setDataBook(res.data.result)
@@ -37,6 +40,7 @@ const BookTable = () => {
             setPageSize(res.data.meta.pageSize)
             setTotal(res.data.meta.total)
         }
+        setIsLoadingTable(false)
     }
 
     const handleDeleteBook = async (id) => {
@@ -151,6 +155,7 @@ const BookTable = () => {
             <Table
                 dataSource={dataBook}
                 columns={columns}
+                rowKey={"_id"}
                 pagination={
                     {
                         current: current,
@@ -159,7 +164,8 @@ const BookTable = () => {
                         total: total,
                         showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total}</div>) }
                     }}
-                onChange={onChange} />
+                onChange={onChange}
+                loading={isLoadingTable} />
 
             <CreateBook
                 setIsCreateBookModalOpen={setIsCreateBookModalOpen}

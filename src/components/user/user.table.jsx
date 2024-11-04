@@ -139,6 +139,7 @@ const UserTable = () => {
             <Table
                 dataSource={dataUser}
                 columns={columns}
+                rowKey={"_id"}
                 pagination={
                     {
                         current: current,

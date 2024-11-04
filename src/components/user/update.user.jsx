@@ -8,6 +8,8 @@ const UpdateUser = (props) => {
     const [fullName, setFullName] = useState("")
     const [phone, setPhone] = useState("")
 
+    const [loading, setLoading] = useState(false)
+
     const { isUpdateModalOpen, setIsUpdateModalOpen, dataUpdateUser,
         setDataUpdateUser, loadUser } = props
 
@@ -20,6 +22,7 @@ const UpdateUser = (props) => {
     }, [dataUpdateUser])
 
     const handleSubmitUpdateUser = async () => {
+        setLoading(true)
         const res = await updateUserAPI(id, fullName, phone)
         if (res.data) {
             notification.success({
@@ -34,6 +37,7 @@ const UpdateUser = (props) => {
                 description: JSON.stringify(res.message)
             })
         }
+        setLoading(false)
     }
 
     const resetAndCloseModal = () => {
@@ -49,7 +53,11 @@ const UpdateUser = (props) => {
             title="Update Information User"
             open={isUpdateModalOpen}
             onOk={() => { handleSubmitUpdateUser() }}
-            onCancel={() => { resetAndCloseModal() }}>
+            onCancel={() => { resetAndCloseModal() }}
+            okButtonProps={{
+                loading: loading
+            }}
+            centered>
             <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
                 <div>
                     <span>Id</span>

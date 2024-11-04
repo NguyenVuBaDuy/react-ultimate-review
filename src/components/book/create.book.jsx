@@ -1,7 +1,8 @@
 import { Form, Input, InputNumber, Modal, notification, Select } from "antd"
 import { useForm } from "antd/es/form/Form"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { createBookAPI, handleUploadFile } from "../../services/api.service"
+import { AuthContext } from "../context/auth.context"
 
 const CreateBook = (props) => {
 
@@ -14,13 +15,6 @@ const CreateBook = (props) => {
 
     const [loading, setLoading] = useState(false)
 
-    const delay = (milSeconds) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve()
-            }, milSeconds)
-        })
-    }
 
     const handleOnChangeFile = (event) => {
         if (!event.target.files || event.target.files.length === 0) {
@@ -46,7 +40,6 @@ const CreateBook = (props) => {
         }
         const { mainText, author, price, quantity, category } = values
         setLoading(true)
-        await delay(2000)
         const resUpload = await handleUploadFile(selectedFile, "book")
         if (resUpload.data) {
             const newThumbnail = resUpload.data.fileUploaded

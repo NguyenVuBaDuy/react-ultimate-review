@@ -14,13 +14,6 @@ const UpdateBook = (props) => {
 
     const [loading, setLoading] = useState(false)
 
-    const delay = (milSeconds) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve()
-            }, milSeconds)
-        })
-    }
 
     useEffect(() => {
         if (dataBookUpdate && dataBookUpdate._id) {
@@ -71,7 +64,6 @@ const UpdateBook = (props) => {
     const handleSubmitButton = async (values) => {
         setLoading(true)
         let newThumbnail = ""
-        await delay(1000)
         if (!preview && !selectedFile) {
             return
         } else if (!selectedFile && preview) {

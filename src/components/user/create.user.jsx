@@ -1,5 +1,6 @@
 import { Form, Input, Modal, notification } from "antd"
 import { createUserAPI } from "../../services/api.service";
+import { useState } from "react";
 
 const CreateUser = (props) => {
 
@@ -7,7 +8,10 @@ const CreateUser = (props) => {
 
     const [form] = Form.useForm();
 
+    const [loading, setLoading] = useState(false)
+
     const handleSubmitCreateUser = async values => {
+        setLoading(true)
         if (values) {
             const { fullName, email, password, phone } = values
             const res = await createUserAPI(fullName, email, password, phone)
@@ -25,6 +29,7 @@ const CreateUser = (props) => {
                 })
             }
         }
+        setLoading(false)
     }
 
     const resetAndCloseModal = () => {
@@ -38,6 +43,9 @@ const CreateUser = (props) => {
             open={isCreateModalOpen}
             onOk={() => { form.submit() }}
             onCancel={() => { resetAndCloseModal() }}
+            okButtonProps={{
+                loading: loading
+            }}
             centered>
             <Form
                 form={form}

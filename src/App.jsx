@@ -14,13 +14,6 @@ const App = () => {
     fetchUserInfo()
   }, [])
 
-  const delay = (milSeconds) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve()
-      }, milSeconds)
-    })
-  }
 
   const fetchUserInfo = async () => {
     const res = await getAccountAPI()
