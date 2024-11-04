@@ -3,6 +3,7 @@ import { Button, Popconfirm, Table } from "antd"
 import { useEffect, useState } from "react"
 import { fetchAllBookAPI } from "../../services/api.service"
 import CreateBook from "./create.book"
+import ViewBookDetail from "./view.book.detail"
 
 const BookTable = () => {
 
@@ -13,9 +14,16 @@ const BookTable = () => {
 
     const [isCreateBookModalOpen, setIsCreateBookModalOpen] = useState(false)
 
+    const [isViewBookDetailOpen, setIsViewBookDetailOpen] = useState(false)
+    const [dataBookDetail, setDataBookDetail] = useState(null)
+
     useEffect(() => {
         loadBook()
     }, [current, pageSize])
+
+    const currency = (money) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money)
+    }
 
     const loadBook = async () => {
         const res = await fetchAllBookAPI(current, pageSize)
@@ -42,7 +50,10 @@ const BookTable = () => {
             render: (_, record) => (
                 <a
                     href="#"
-                    onClick={() => { }} >
+                    onClick={() => {
+                        setDataBookDetail(record)
+                        setIsViewBookDetailOpen(true)
+                    }} >
                     {record._id}
                 </a >
             )
@@ -53,7 +64,10 @@ const BookTable = () => {
         },
         {
             title: "Price",
-            dataIndex: "price"
+            dataIndex: "price",
+            render: (_, record) => (
+                <div>{currency(record.price)}</div>
+            )
         },
         {
             title: "Quantity",
@@ -129,6 +143,11 @@ const BookTable = () => {
                 setIsCreateBookModalOpen={setIsCreateBookModalOpen}
                 isCreateBookModalOpen={isCreateBookModalOpen}
                 loadBook={loadBook} />
+            <ViewBookDetail
+                isViewBookDetailOpen={isViewBookDetailOpen}
+                setIsViewBookDetailOpen={setIsViewBookDetailOpen}
+                dataBookDetail={dataBookDetail}
+                currency={currency} />
 
         </>
     )
